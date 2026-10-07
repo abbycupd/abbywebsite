@@ -49,6 +49,44 @@
   .container-page {
     @apply mx-auto w-full max-w-[1100px] px-6 sm:px-8;
   }
+
+  /* Admin article editor — mirrors the public note typography so writing
+     looks like the published result. See components/admin/editor. */
+  .journal-editor-content {
+    @apply text-[15px] leading-relaxed text-graphite outline-none sm:text-base;
+  }
+  .journal-editor-content p {
+    @apply mb-4;
+  }
+  .journal-editor-content h2 {
+    @apply mb-3 mt-6 font-display text-2xl font-semibold tracking-tight text-ink;
+  }
+  .journal-editor-content h3 {
+    @apply mb-3 mt-6 font-display text-xl font-semibold tracking-tight text-ink;
+  }
+  .journal-editor-content ul {
+    @apply mb-4 list-disc space-y-2 pl-5;
+  }
+  .journal-editor-content ol {
+    @apply mb-4 list-decimal space-y-2 pl-5;
+  }
+  .journal-editor-content blockquote {
+    @apply border-l-2 border-roast/40 pl-4 italic;
+  }
+  .journal-editor-content a {
+    @apply underline decoration-mist underline-offset-2 hover:text-roast;
+  }
+  .journal-editor-content img {
+    @apply my-2 w-full rounded-md border border-mist;
+  }
+  .journal-editor-content p.is-editor-empty:first-child::before {
+    content: attr(data-placeholder);
+    float: left;
+    height: 0;
+    opacity: 0.5;
+    pointer-events: none;
+    color: theme("colors.graphite");
+  }
 }
 
 @layer utilities {

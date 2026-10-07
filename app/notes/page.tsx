@@ -2,6 +2,12 @@ import type { Metadata } from "next";
 import { SiteNav } from "@/components/site-nav";
 import { SiteFooter } from "@/components/site-footer";
 import { NotesList } from "@/components/notes-list";
+import { fetchPublishedPosts } from "@/lib/notes/queries";
+import { prerenderedSlugsFor } from "@/lib/notes/urls";
+
+// Static export: render once at build time, with fresh Supabase data (see
+// the no-store note in lib/supabase/client.ts).
+export const dynamic = "force-static";
 
 export const metadata: Metadata = {
   title: "Notes",
@@ -9,7 +15,9 @@ export const metadata: Metadata = {
   alternates: { canonical: "/notes" },
 };
 
-export default function NotesPage() {
+export default async function NotesPage() {
+  const initialNotes = await fetchPublishedPosts();
+
   return (
     <>
       <SiteNav />
@@ -21,7 +29,7 @@ export default function NotesPage() {
           through.
         </p>
 
-        <NotesList />
+        <NotesList initialNotes={initialNotes} prerenderedSlugs={prerenderedSlugsFor(initialNotes)} />
       </main>
       <SiteFooter />
     </>

@@ -7,9 +7,16 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "migrate:notes": "tsx scripts/migrate-notes.ts"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.117.2",
+    "@tiptap/extension-image": "^3.31.4",
+    "@tiptap/extension-placeholder": "^3.31.4",
+    "@tiptap/pm": "^3.31.4",
+    "@tiptap/react": "^3.31.4",
+    "@tiptap/starter-kit": "^3.31.4",
     "cmdk": "^1.0.0",
     "framer-motion": "^11.3.24",
     "lucide-react": "^0.400.0",
@@ -26,6 +33,7 @@
     "eslint-config-next": "14.2.5",
     "postcss": "^8.4.40",
     "tailwindcss": "^3.4.7",
+    "tsx": "^4.23.15",
     "typescript": "^5.5.4"
   }
 }

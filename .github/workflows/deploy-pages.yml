@@ -25,6 +25,13 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
+        env:
+          # Public anon key — safe in CI logs/build output, permissions are
+          # enforced by Supabase RLS. Set these under repo Settings → Secrets
+          # and variables → Actions. Used at build time to pre-render
+          # whatever notes are currently published (see README → "Notes CMS").
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: ./out

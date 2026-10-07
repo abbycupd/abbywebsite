@@ -1,7 +1,9 @@
-// Short-form writing. Each entry is one post. `body` is an array of
-// paragraphs (plain strings) — keep formatting simple on purpose.
-// Add new posts to the top of this array; the newest one shows first
-// (the array order IS the display order, so keep it roughly newest-first).
+// HISTORICAL / NO LONGER USED BY THE LIVE SITE.
+//
+// Notes now live in Supabase and are managed from /admin — see README.md
+// ("Notes CMS"). This file was migrated into the database by
+// scripts/migrate-notes.ts and is kept only as a readable backup of the
+// original content. Editing it has no effect on the published site.
 
 export type Note = {
   slug: string;

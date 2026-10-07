@@ -1,8 +1,10 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { notes } from "@/data/notes";
+import { fetchPublishedPosts } from "@/lib/notes/queries";
+import { noteHref } from "@/lib/notes/urls";
+import type { JournalPost } from "@/lib/notes/types";
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("en-GB", {
@@ -12,14 +14,30 @@ function formatDate(iso: string) {
   });
 }
 
-export function NotesList() {
+/** `initialNotes` comes from the build-time fetch in app/notes/page.tsx, so
+ * the page has content on first paint. We then refresh from Supabase on
+ * mount so newly published / edited / unpublished posts show up correctly
+ * without needing a rebuild. Posts without a pre-built page link to the live
+ * viewer instead (see lib/notes/urls.ts). */
+export function NotesList({
+  initialNotes,
+  prerenderedSlugs,
+}: {
+  initialNotes: JournalPost[];
+  prerenderedSlugs: string[];
+}) {
+  const [notes, setNotes] = useState(initialNotes);
   const [active, setActive] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchPublishedPosts().then(setNotes);
+  }, []);
 
   const categories = useMemo(() => {
     const set = new Set<string>();
     notes.forEach((n) => n.tags.forEach((t) => set.add(t)));
     return Array.from(set).sort();
-  }, []);
+  }, [notes]);
 
   const visible = active ? notes.filter((n) => n.tags.includes(active)) : notes;
 
@@ -59,10 +77,10 @@ export function NotesList() {
         {visible.map((note) => (
           <Link
             key={note.slug}
-            href={`/notes/${note.slug}`}
+            href={noteHref(note.slug, prerenderedSlugs)}
             className="group flex flex-col gap-1 py-6 sm:flex-row sm:items-baseline sm:gap-8"
           >
-            <span className="label w-28 shrink-0">{formatDate(note.date)}</span>
+            <span className="label w-28 shrink-0">{formatDate(note.published_at ?? note.created_at)}</span>
             <span className="flex-1">
               <h2 className="font-display text-lg font-medium tracking-tight transition-colors group-hover:text-roast">
                 {note.title}
@@ -72,7 +90,9 @@ export function NotesList() {
           </Link>
         ))}
         {visible.length === 0 && (
-          <p className="py-10 text-sm text-graphite">Nothing tagged &ldquo;{active}&rdquo; yet.</p>
+          <p className="py-10 text-sm text-graphite">
+            {active ? <>Nothing tagged &ldquo;{active}&rdquo; yet.</> : "Nothing published yet — check back soon."}
+          </p>
         )}
       </div>
     </div>
